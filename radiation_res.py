@@ -5,6 +5,7 @@ import json
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+from math import floor,ceil
 
 directory=sys.argv[1]
 rad=sys.argv[2]
@@ -81,7 +82,7 @@ for key,value in data.items():
 
         if x2 and v2:
             plt.plot(sorted(x2),v2,"-o",label="L"+str(key))
-            plt.xticks(np.arange(min(x2),max(x2)+2,2))
+            plt.xticks(np.arange(floor(min(x2)),ceil(max(x2))+2,2))
             plt.xlabel('Integrated luminosity ($fb^{-1}$)',labelpad=20,fontsize=25)
             plt.ylabel("Resolution (ns)",fontsize=25)
             plt.yticks(np.arange(0.1,0.4,0.01))
@@ -96,6 +97,5 @@ for key,value in data.items():
 
             fig=plt.gcf()
             fig.set_size_inches(15,8)
-            fig.autofmt_xdate()
             fig.savefig(os.path.join(output_path,sector,station,plane,"resolution_per_rad in "+k+", L"+str(key)))
             fig.clf()
