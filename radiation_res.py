@@ -6,20 +6,20 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from math import floor,ceil
+import re
 
 directory=sys.argv[1]
 rad=sys.argv[2]
 output_dir=sys.argv[3]
 jsons_it=[]
 data={}
-for i in range(6): jsons_it.append([])
-matplotlib.use("GTK3Agg")
+for i in range(7): jsons_it.append([])
 
 r_list=[]
 with open(rad) as f:
     line=f.readline()[3:]
     while line:
-        line=f.readline()[3:]
+        line=f.readline().rstrip()[3:]
         r_list.append((line.split(" --> ")))
 r_list.pop()
 r_list=dict(r_list)
@@ -28,8 +28,8 @@ for fname in sorted(os.listdir(directory)):
     if fname.endswith(".json"):
         run_id=""
         if len(fname.split("_"))>2:
-            run_id=fname.split("_")[2][3:]
-            iteration_id=int(fname[fname.index("L")+1])
+            run_id=re.search(r"Run\d\d\d\d\d\d",fname).group(0)[3:]
+            iteration_id=int(re.search(r"_L\d",fname).group(0)[2])
             if iteration_id!=0 and (iteration_id>1 or "Cut16" in fname):
                 f=open(os.path.join(directory,fname),"r")
                 d=json.loads(f.read())
