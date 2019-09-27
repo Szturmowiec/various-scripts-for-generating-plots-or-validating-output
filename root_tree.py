@@ -32,11 +32,18 @@ r_list=dict(r_list)
 for fname in sorted(os.listdir(directory)):
     if fname.endswith(".json"):
         if len(fname.split("_"))>2:
-            run_id=int(re.search(r"Run\d\d\d\d\d\d",fname).group(0)[3:])
-            iteration_id=int(re.search(r"_L\d",fname).group(0)[2])
-            f=open(os.path.join(directory,fname),"r")
-            data.append(((json.loads(f.read())),iteration_id,run_id))
-            f.close()
+            year=2018
+            try:
+                year=int(re.search(r"_201\d_",fname).group(0)[1:-1])
+            except AttributeError:
+                continue
+
+            if year!=2017:
+                run_id=int(re.search(r"Run\d\d\d\d\d\d",fname).group(0)[3:])
+                iteration_id=int(re.search(r"_L\d",fname).group(0)[2])
+                f=open(os.path.join(directory,fname),"r")
+                data.append(((json.loads(f.read())),iteration_id,run_id))
+                f.close()
 
 f=ROOT.TFile(out,'RECREATE')
 tree=ROOT.TTree('Output','')

@@ -2,23 +2,24 @@ import os
 import shutil
 import sys
 import json
+import re
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
 directory=sys.argv[1]
 output_dir=sys.argv[2]
+iter_nr=sys.argv[3]
 jsons_it=[]
 data={}
-for i in range(6): jsons_it.append([])
-matplotlib.use("GTK3Agg")
+for i in range(int(iter_nr)): jsons_it.append([])
 
 for fname in sorted(os.listdir(directory)):
     if fname.endswith(".json"):
         run_id=""
         if len(fname.split("_"))>2:
-            run_id=fname.split("_")[2][3:]
-            iteration_id=int(fname[fname.index("L")+1])
+            run_id=re.search(r"Run\d\d\d\d\d\d",fname).group(0)[3:]
+            iteration_id=int(re.search(r"_L\d",fname).group(0)[2])
             if iteration_id!=0 and (iteration_id>1 or "Cut16" in fname):
                 f=open(os.path.join(directory,fname),"r")
                 d=json.loads(f.read())

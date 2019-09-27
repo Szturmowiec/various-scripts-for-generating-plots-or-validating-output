@@ -11,9 +11,10 @@ import re
 directory=sys.argv[1]
 rad=sys.argv[2]
 output_dir=sys.argv[3]
+iter_nr=sys.argv[4]
 jsons_it=[]
 data={}
-for i in range(7): jsons_it.append([])
+for i in range(int(iter_nr)): jsons_it.append([])
 
 r_list=[]
 with open(rad) as f:

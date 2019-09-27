@@ -5,6 +5,7 @@ import json
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+import re
 
 directory=sys.argv[1]
 output_dir=sys.argv[2]
@@ -12,14 +13,21 @@ data=[]
 channels_data={}
 clean_data={}
 x=[]
-matplotlib.use("GTK3Agg")
 
 if not os.path.exists(output_dir): os.mkdir(output_dir)
 
 for fname in sorted(os.listdir(directory)):
     if fname.endswith(".json"):
-        f=open(os.path.join(directory,fname),"r")
-        data.append(json.loads(f.read()))
+        if len(fname.split("_"))>2:
+            year=2018
+            try:
+                year=int(re.search(r"_201\d_",fname).group(0)[1:-1])
+            except AttributeError:
+                continue
+
+            if year!=2017:
+                f=open(os.path.join(directory,fname),"r")
+                data.append(json.loads(f.read()))
 
 for i in range(len(data)):
     for sec in data[i]["Parameters"]["Sectors"]:
@@ -65,7 +73,6 @@ for key,value in clean_data.items():
     plt.grid()
     ax=plt.gca()
     ax.legend(loc='upper right')
-    #plt.legend(prop={'size': 15})
 
     fig=plt.gcf()
     fig.set_size_inches(15,8)

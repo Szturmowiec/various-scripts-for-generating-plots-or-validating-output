@@ -2,6 +2,7 @@ import os
 import shutil
 import sys
 import json
+import re
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
@@ -11,13 +12,11 @@ directory=sys.argv[1]
 output_dir=sys.argv[2]
 jsons=[]
 data={}
-matplotlib.use("GTK3Agg")
 
 for fname in sorted(os.listdir(directory)):
     if fname.endswith(".json"):
-        run_id=""
         if len(fname.split("_"))>2:
-            iteration_id=int(fname[fname.index("L")+1])
+            iteration_id=int(re.search(r"_L\d",fname).group(0)[2])
             if iteration_id==5:
                 f=open(os.path.join(directory,fname),"r")
                 d=json.loads(f.read())

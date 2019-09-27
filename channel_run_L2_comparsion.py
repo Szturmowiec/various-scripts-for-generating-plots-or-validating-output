@@ -2,6 +2,7 @@ import os
 import shutil
 import sys
 import json
+import re
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -16,22 +17,21 @@ directory2=sys.argv[2]
 output_dir=sys.argv[3]
 jsons_it=[]
 data={}
-matplotlib.use("GTK3Agg")
 
 l=sorted(os.listdir(directory))
 l2=[]
 for f in l:
     if len(f.split("_"))>2:
-        run_id=f.split("_")[2][3:]
-        iteration_id=int(f[f.index("L")+1])
+        run_id=re.search(r"Run\d\d\d\d\d\d",f).group(0)[3:]
+        iteration_id=int(re.search(r"_L\d",f).group(0)[2])
         if iteration_id==2 and contains_run(os.listdir(directory2),run_id): l2.append(f)
 
 for fname,fname2 in zip(l2,sorted(os.listdir(directory2))):
     if fname.endswith(".json") and fname2.endswith(".json"):
         run_id=""
         if len(fname.split("_"))>2 and len(fname2.split("_"))>2:
-            run_id=fname.split("_")[2][3:]
-            run_id2=fname2.split("_")[1][3:]
+            run_id=re.search(r"Run\d\d\d\d\d\d",fname).group(0)[3:]
+            run_id2=re.search(r"Run\d\d\d\d\d\d",fname2).group(0)[3:]
 
             if run_id==run_id2:
                 f=open(os.path.join(directory,fname),"r")

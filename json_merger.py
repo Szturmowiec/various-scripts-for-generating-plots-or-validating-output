@@ -2,6 +2,7 @@ import os
 import sys
 import shutil
 import json
+import re
 
 main_json=sys.argv[1]
 input_dir=sys.argv[2]
@@ -18,8 +19,8 @@ os.makedirs(output_path)
 for fname in sorted(os.listdir(input_dir)):
     if fname.endswith(".json"):
         if len(fname.split("_"))>2:
-            run_id=fname.split("_")[2][3:]
-            iteration_id=int(fname[fname.index("L")+1])
+            run_id=re.search(r"Run\d\d\d\d\d\d",fname).group(0)[3:]
+            iteration_id=int(re.search(r"_L\d",fname).group(0)[2])
             if iteration_id>1 or "Cut16" in fname:
                 f=open(os.path.join(input_dir,fname),"r")
                 d=json.loads(f.read())
